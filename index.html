@@ -1,0 +1,102 @@
+<script>
+    // Load cumulative feed from local storage or default to 163.0
+    let currentCumulativeFeed = parseFloat(localStorage.getItem('aquaCumFeed')) || 163.0; 
+
+    function calculateMetrics() {
+        const seed = parseFloat(document.getElementById('seedCount').value) || 0;
+        const survival = parseFloat(document.getElementById('survivalRate').value) / 100 || 0;
+        const abw = parseFloat(document.getElementById('abw').value) || 0;
+        const feed = parseFloat(document.getElementById('totalFeed').value) || 0;
+
+        const biomass = (seed * survival * abw) / 1000;
+        let fcr = biomass > 0 ? (feed / biomass) : 0;
+
+        document.getElementById('calcBiomass').innerText = biomass.toFixed(1) + " kg";
+        
+        const fcrElement = document.getElementById('calcFCR');
+        fcrElement.innerText = fcr.toFixed(2);
+        
+        if(fcr > 1.5) {
+            fcrElement.style.color = "var(--danger)";
+        } else {
+            fcrElement.style.color = "var(--primary-dark)";
+        }
+    }
+
+    function calculateShifts() {
+        const dailyFeed = parseFloat(document.getElementById('dailyFeedInput').value) || 0;
+        document.getElementById('shift1').innerText = (dailyFeed * 0.25).toFixed(2) + " kg";
+        document.getElementById('shift2').innerText = (dailyFeed * 0.30).toFixed(2) + " kg";
+        document.getElementById('shift3').innerText = (dailyFeed * 0.25).toFixed(2) + " kg";
+        document.getElementById('shift4').innerText = (dailyFeed * 0.20).toFixed(2) + " kg";
+    }
+
+    function addToLog() {
+        const doc = document.getElementById('logDoc').value;
+        const dailyFeed = parseFloat(document.getElementById('logFeed').value);
+        const tray = document.getElementById('logTray').value;
+
+        if (!doc || isNaN(dailyFeed)) {
+            alert("Please enter both DOC and Daily Feed.");
+            return;
+        }
+
+        currentCumulativeFeed += dailyFeed;
+
+        const tableBody = document.getElementById('logTableBody');
+        const newRow = document.createElement('tr');
+
+        let fcrStatus = "Monitor";
+        if(tray.toLowerCase().includes("empty")) fcrStatus = "<span style='color: var(--success); font-weight: bold;'>Optimal</span>";
+        if(tray.toLowerCase().includes("leftover") || tray.toLowerCase().includes("l1")) fcrStatus = "<span style='color: var(--danger); font-weight: bold;'>Risk</span>";
+
+        newRow.innerHTML = `
+            <td>${doc}</td>
+            <td>${dailyFeed.toFixed(1)}</td>
+            <td>${currentCumulativeFeed.toFixed(1)}</td>
+            <td>${tray || "-"}</td>
+            <td>${fcrStatus}</td>
+        `;
+
+        tableBody.appendChild(newRow);
+        
+        document.getElementById('totalFeed').value = currentCumulativeFeed.toFixed(1);
+        calculateMetrics();
+
+        // --- NEW: Save data to the device ---
+        saveData();
+
+        document.getElementById('logDoc').value = parseInt(doc) + 1; 
+        document.getElementById('logFeed').value = '';
+        document.getElementById('logTray').value = '';
+    }
+
+    // --- NEW: Functions to Save and Load ---
+    function saveData() {
+        localStorage.setItem('aquaLogTable', document.getElementById('logTableBody').innerHTML);
+        localStorage.setItem('aquaCumFeed', currentCumulativeFeed.toString());
+    }
+
+    function loadData() {
+        const savedTable = localStorage.getItem('aquaLogTable');
+        if(savedTable) {
+            document.getElementById('logTableBody').innerHTML = savedTable;
+            document.getElementById('totalFeed').value = currentCumulativeFeed.toFixed(1);
+        }
+    }
+
+    function clearData() {
+        if(confirm("Are you sure you want to delete all logs? This cannot be undone.")) {
+            localStorage.removeItem('aquaLogTable');
+            localStorage.removeItem('aquaCumFeed');
+            location.reload(); // Refresh the page to reset
+        }
+    }
+
+    // Run initial setup on page load
+    window.onload = function() {
+        loadData();
+        calculateMetrics();
+        calculateShifts();
+    };
+</script>
