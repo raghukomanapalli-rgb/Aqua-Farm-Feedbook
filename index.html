@@ -3,436 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aqua Farm Feedbook</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-dark: #1a1a1a;
-            --primary: #2196F3;
-            --danger: #d32f2f;
-            --success: #388e3c;
-            --warning: #f57c00;
-            --light-bg: #f5f5f5;
-            --border-color: #ddd;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--primary-dark);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .section {
-            background: white;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .section h2 {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        input, select {
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1em;
-            width: 100%;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
-        }
-
-        button {
-            padding: 12px 30px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        button:hover {
-            background-color: #1976D2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-        }
-
-        .btn-danger:hover {
-            background-color: #b71c1c;
-        }
-
-        .result-box {
-            background-color: var(--light-bg);
-            padding: 15px;
-            border-left: 4px solid var(--primary);
-            border-radius: 4px;
-            margin: 15px 0;
-        }
-
-        .result-box p {
-            font-size: 1.1em;
-            margin: 8px 0;
-        }
-
-        .result-value {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 1.3em;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table thead {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        table th {
-            padding: 15px;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        table tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        table tbody tr:nth-child(even) {
-            background-color: #f5f5f5;
-        }
-
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        .grid-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .metric-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .metric-card h3 {
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .metric-card .value {
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            header h1 {
-                font-size: 1.8em;
-            }
-
-            .section {
-                padding: 15px;
-            }
-
-            .form-group {
-                grid-template-columns: 1fr;
-            }
-
-            table {
-                font-size: 0.9em;
-            }
-
-            table th, table td {
-                padding: 8px;
-            }
-        }
-    </style>
+    <title>Digital Feedbook</title>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🐠 Aqua Farm Feedbook</h1>
-            <p>Professional Feed Management & Analysis System</p>
-        </header>
+    <h1>120-Day Digital Feedbook</h1>
+    <form>
+        <label for="farm-name">Farm Name:</label>
+        <input type="text" id="farm-name" name="farm-name" required><br>
 
-        <!-- Metrics Calculation Section -->
-        <div class="section">
-            <h2>📊 Calculate Metrics</h2>
-            <div class="form-group">
-                <input type="number" id="seedCount" placeholder="Seed Count" step="1">
-                <input type="number" id="survivalRate" placeholder="Survival Rate (%)" min="0" max="100" step="0.1">
-                <input type="number" id="abw" placeholder="ABW (Average Body Weight - kg)" step="0.01">
-                <input type="number" id="totalFeed" placeholder="Total Feed (kg)" step="0.1">
-            </div>
-            <button onclick="calculateMetrics()">Calculate Metrics</button>
-            
-            <div class="grid-results">
-                <div class="metric-card">
-                    <h3>Biomass</h3>
-                    <div class="value" id="calcBiomass">0 kg</div>
-                </div>
-                <div class="metric-card">
-                    <h3>FCR (Feed Conversion Ratio)</h3>
-                    <div class="value" id="calcFCR">0</div>
-                </div>
-            </div>
-        </div>
+        <label for="number-of-tanks">Number of Tanks:</label>
+        <input type="number" id="number-of-tanks" name="number-of-tanks" required><br>
 
-        <!-- Shift Distribution Section -->
-        <div class="section">
-            <h2>🔄 Feed Distribution by Shift</h2>
-            <div class="form-group">
-                <input type="number" id="dailyFeedInput" placeholder="Daily Feed Amount (kg)" step="0.1">
-                <button onclick="calculateShifts()" style="width: 100%;">Calculate Shift Distribution</button>
-            </div>
-            
-            <div class="grid-results">
-                <div class="metric-card">
-                    <h3>Shift 1 (25%)</h3>
-                    <div class="value" id="shift1">0 kg</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Shift 2 (30%)</h3>
-                    <div class="value" id="shift2">0 kg</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Shift 3 (25%)</h3>
-                    <div class="value" id="shift3">0 kg</div>
-                </div>
-                <div class="metric-card">
-                    <h3>Shift 4 (20%)</h3>
-                    <div class="value" id="shift4">0 kg</div>
-                </div>
-            </div>
-        </div>
+        <label for="hatchery-name">Hatchery Name:</label>
+        <input type="text" id="hatchery-name" name="hatchery-name" required><br>
 
-        <!-- Feeding Log Section -->
-        <div class="section">
-            <h2>📝 Feeding Log</h2>
-            <div class="form-group">
-                <input type="number" id="logDoc" placeholder="DOC (Day of Culture)" step="1">
-                <input type="number" id="logFeed" placeholder="Daily Feed Amount (kg)" step="0.1">
-                <input type="text" id="logTray" placeholder="Tray Status (e.g., empty, leftover, L1)">
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button onclick="addToLog()">Add to Log</button>
-                <button class="btn-danger" onclick="clearData()">Clear All Data</button>
-            </div>
+        <label for="seed-count">Seed Count:</label>
+        <select id="seed-count" name="seed-count">
+            <option value="10000">10000</option>
+            <option value="20000">20000</option>
+            <option value="30000">30000</option>
+            <option value="40000">40000</option>
+            <option value="50000">50000</option>
+            <option value="60000">60000</option>
+            <option value="70000">70000</option>
+            <option value="80000">80000</option>
+            <option value="90000">90000</option>
+            <option value="100000">100000</option>
+            <option value="110000">110000</option>
+            <option value="120000">120000</option>
+            <option value="130000">130000</option>
+            <option value="140000">140000</option>
+            <option value="150000">150000</option>
+            <option value="160000">160000</option>
+            <option value="170000">170000</option>
+            <option value="180000">180000</option>
+            <option value="190000">190000</option>
+            <option value="200000">200000</option>
+            <option value="210000">210000</option>
+            <option value="220000">220000</option>
+            <option value="230000">230000</option>
+            <option value="240000">240000</option>
+            <option value="250000">250000</option>
+            <option value="260000">260000</option>
+            <option value="270000">270000</option>
+            <option value="280000">280000</option>
+            <option value="290000">290000</option>
+            <option value="300000">300000</option>
+            <option value="310000">310000</option>
+            <option value="320000">320000</option>
+            <option value="330000">330000</option>
+            <option value="340000">340000</option>
+            <option value="350000">350000</option>
+            <option value="360000">360000</option>
+            <option value="370000">370000</option>
+            <option value="380000">380000</option>
+            <option value="390000">390000</option>
+            <option value="400000">400000</option>
+            <option value="410000">410000</option>
+            <option value="420000">420000</option>
+            <option value="430000">430000</option>
+            <option value="440000">440000</option>
+            <option value="450000">450000</option>
+            <option value="460000">460000</option>
+            <option value="470000">470000</option>
+            <option value="480000">480000</option>
+            <option value="490000">490000</option>
+            <option value="500000">500000</option>
+            <option value="510000">510000</option>
+            <option value="520000">520000</option>
+            <option value="530000">530000</option>
+            <option value="540000">540000</option>
+            <option value="550000">550000</option>
+            <option value="560000">560000</option>
+            <option value="570000">570000</option>
+            <option value="580000">580000</option>
+            <option value="590000">590000</option>
+            <option value="600000">600000</option>
+            <option value="610000">610000</option>
+            <option value="620000">620000</option>
+            <option value="630000">630000</option>
+            <option value="640000">640000</option>
+            <option value="650000">650000</option>
+            <option value="660000">660000</option>
+            <option value="670000">670000</option>
+            <option value="680000">680000</option>
+            <option value="690000">690000</option>
+            <option value="700000">700000</option>
+            <option value="710000">710000</option>
+            <option value="720000">720000</option>
+            <option value="730000">730000</option>
+            <option value="740000">740000</option>
+            <option value="750000">750000</option>
+            <option value="760000">760000</option>
+            <option value="770000">770000</option>
+            <option value="780000">780000</option>
+            <option value="790000">790000</option>
+            <option value="800000">800000</option>
+            <option value="810000">810000</option>
+            <option value="820000">820000</option>
+            <option value="830000">830000</option>
+            <option value="840000">840000</option>
+            <option value="850000">850000</option>
+            <option value="860000">860000</option>
+            <option value="870000">870000</option>
+            <option value="880000">880000</option>
+            <option value="890000">890000</option>
+            <option value="900000">900000</option>
+            <option value="910000">910000</option>
+            <option value="920000">920000</option>
+            <option value="930000">930000</option>
+            <option value="940000">940000</option>
+            <option value="950000">950000</option>
+            <option value="960000">960000</option>
+            <option value="970000">970000</option>
+            <option value="980000">980000</option>
+            <option value="990000">990000</option>
+            <option value="1000000">1000000</option>
+        </select><br>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>DOC</th>
-                        <th>Daily Feed (kg)</th>
-                        <th>Cumulative Feed (kg)</th>
-                        <th>Tray Status</th>
-                        <th>FCR Status</th>
-                    </tr>
-                </thead>
-                <tbody id="logTableBody">
-                    <!-- Log entries will be added here -->
-                </tbody>
-            </table>
-        </div>
+        <label for="feed-type">Feed Type:</label>
+        <select id="feed-type" name="feed-type">
+            <option value="Higee Feeds">Higee Feeds</option>
+            <option value="CP">CP</option>
+            <option value="Kaytee">Kaytee</option>
+            <option value="Srinivasa Feeds">Srinivasa Feeds</option>
+            <option value="Heritage Feeds">Heritage Feeds</option>
+            <option value="Krish Feeds">Krish Feeds</option>
+        </select><br>
 
-        <footer style="text-align: center; padding: 20px; color: #666; font-size: 0.9em;">
-            <p>Aqua Farm Feedbook © 2026 | Data is saved locally on your device</p>
-        </footer>
+        <label for="seed-date">Seed Date:</label>
+        <input type="date" id="seed-date" name="seed-date" required><br>
+
+        <input type="submit" value="Generate Feeding Schedule">
+    </form>
+
+    <div id="feeding-schedule">
+        <h2>21-Day Blind Feeding Schedule</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Feed Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Schedule will be populated here -->
+            </tbody>
+        </table>
     </div>
-
+    
     <script>
-        // Load cumulative feed from local storage or default to 163.0
-        let currentCumulativeFeed = parseFloat(localStorage.getItem('aquaCumFeed')) || 163.0; 
-
-        function calculateMetrics() {
-            const seed = parseFloat(document.getElementById('seedCount').value) || 0;
-            const survival = parseFloat(document.getElementById('survivalRate').value) / 100 || 0;
-            const abw = parseFloat(document.getElementById('abw').value) || 0;
-            const feed = parseFloat(document.getElementById('totalFeed').value) || 0;
-
-            const biomass = (seed * survival * abw) / 1000;
-            let fcr = biomass > 0 ? (feed / biomass) : 0;
-
-            document.getElementById('calcBiomass').innerText = biomass.toFixed(1) + " kg";
-            
-            const fcrElement = document.getElementById('calcFCR');
-            fcrElement.innerText = fcr.toFixed(2);
-            
-            if(fcr > 1.5) {
-                fcrElement.parentElement.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
-            } else {
-                fcrElement.parentElement.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
-            }
-        }
-
-        function calculateShifts() {
-            const dailyFeed = parseFloat(document.getElementById('dailyFeedInput').value) || 0;
-            document.getElementById('shift1').innerText = (dailyFeed * 0.25).toFixed(2) + " kg";
-            document.getElementById('shift2').innerText = (dailyFeed * 0.30).toFixed(2) + " kg";
-            document.getElementById('shift3').innerText = (dailyFeed * 0.25).toFixed(2) + " kg";
-            document.getElementById('shift4').innerText = (dailyFeed * 0.20).toFixed(2) + " kg";
-        }
-
-        function addToLog() {
-            const doc = document.getElementById('logDoc').value;
-            const dailyFeed = parseFloat(document.getElementById('logFeed').value);
-            const tray = document.getElementById('logTray').value;
-
-            if (!doc || isNaN(dailyFeed)) {
-                alert("Please enter both DOC and Daily Feed.");
-                return;
-            }
-
-            currentCumulativeFeed += dailyFeed;
-
-            const tableBody = document.getElementById('logTableBody');
-            const newRow = document.createElement('tr');
-
-            let fcrStatus = "<span class='status-badge' style='background-color: #fff3cd; color: #856404;'>Monitor</span>";
-            if(tray.toLowerCase().includes("empty")) {
-                fcrStatus = "<span class='status-badge' style='background-color: #d4edda; color: #155724;'>✓ Optimal</span>";
-            }
-            if(tray.toLowerCase().includes("leftover") || tray.toLowerCase().includes("l1")) {
-                fcrStatus = "<span class='status-badge' style='background-color: #f8d7da; color: #721c24;'>⚠ Risk</span>";
-            }
-
-            newRow.innerHTML = `
-                <td>${doc}</td>
-                <td>${dailyFeed.toFixed(1)}</td>
-                <td><strong>${currentCumulativeFeed.toFixed(1)}</strong></td>
-                <td>${tray || "-"}</td>
-                <td>${fcrStatus}</td>
-            `;
-
-            tableBody.appendChild(newRow);
-            
-            document.getElementById('totalFeed').value = currentCumulativeFeed.toFixed(1);
-            calculateMetrics();
-
-            // Save data to the device
-            saveData();
-
-            // Reset form
-            document.getElementById('logDoc').value = parseInt(doc) + 1; 
-            document.getElementById('logFeed').value = '';
-            document.getElementById('logTray').value = '';
-        }
-
-        function saveData() {
-            localStorage.setItem('aquaLogTable', document.getElementById('logTableBody').innerHTML);
-            localStorage.setItem('aquaCumFeed', currentCumulativeFeed.toString());
-        }
-
-        function loadData() {
-            const savedTable = localStorage.getItem('aquaLogTable');
-            if(savedTable) {
-                document.getElementById('logTableBody').innerHTML = savedTable;
-                document.getElementById('totalFeed').value = currentCumulativeFeed.toFixed(1);
-            }
-        }
-
-        function clearData() {
-            if(confirm("Are you sure you want to delete all logs? This cannot be undone.")) {
-                localStorage.removeItem('aquaLogTable');
-                localStorage.removeItem('aquaCumFeed');
-                currentCumulativeFeed = 163.0;
-                document.getElementById('logTableBody').innerHTML = '';
-                document.getElementById('totalFeed').value = '';
-                location.reload();
-            }
-        }
-
-        // Run initial setup on page load
-        window.addEventListener('load', function() {
-            loadData();
-            calculateMetrics();
-            calculateShifts();
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const seedCount = parseInt(document.getElementById('seed-count').value);
+            const feedType = document.getElementById('feed-type').value;
+            populateFeedingSchedule(seedCount, feedType);
         });
+
+        function populateFeedingSchedule(seedCount, feedType) {
+            const feedingSchedule = document.getElementById('feeding-schedule').querySelector('tbody');
+            feedingSchedule.innerHTML = '';
+            const feedAmount = calculateFeedAmount(seedCount, feedType);
+            for (let day = 1; day <= 21; day++) {
+                const row = feedingSchedule.insertRow();
+                const cellDay = row.insertCell(0);
+                const cellAmount = row.insertCell(1);
+                cellDay.textContent = `Day ${day}`;
+                cellAmount.textContent = `${feedAmount} kg`;
+            }
+        }
+
+        function calculateFeedAmount(seedCount, feedType) {
+            // Example calculation logic based on feed type and seed count
+            let multiplier = 0.02; // 2% of seed weight as feed
+            if (feedType === 'Higee Feeds') multiplier = 0.025;
+            else if (feedType === 'CP') multiplier = 0.03;
+            else if (feedType === 'Kaytee') multiplier = 0.022;
+            else if (feedType === 'Srinivasa Feeds') multiplier = 0.021;
+            else if (feedType === 'Heritage Feeds') multiplier = 0.024;
+            else if (feedType === 'Krish Feeds') multiplier = 0.023;
+            return (seedCount * multiplier).toFixed(2);
+        }
     </script>
 </body>
 </html>
