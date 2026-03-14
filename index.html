@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Vannamei Shrimp Farm Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Vannamei Farm Manager</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -13,11 +13,11 @@
 body{
 font-family:Arial;
 margin:0;
-background:#f2f7f8;
+background:#eef4f5;
 }
 
 header{
-background:#00695c;
+background:#00796b;
 color:white;
 padding:15px;
 text-align:center;
@@ -25,8 +25,6 @@ text-align:center;
 
 .container{
 padding:15px;
-max-width:1000px;
-margin:auto;
 }
 
 .card{
@@ -34,29 +32,29 @@ background:white;
 padding:15px;
 margin-bottom:15px;
 border-radius:10px;
-box-shadow:0 3px 8px rgba(0,0,0,0.1);
+box-shadow:0 3px 6px rgba(0,0,0,0.15);
 }
 
 h2{
-color:#00695c;
+color:#00796b;
 }
 
 input,button,select{
 width:100%;
 padding:10px;
-margin:6px 0;
+margin:5px 0;
 }
 
 button{
-background:#00695c;
+background:#00796b;
 color:white;
 border:none;
-border-radius:6px;
+border-radius:5px;
 }
 
 .dashboard{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(2,1fr);
 gap:10px;
 }
 
@@ -80,22 +78,29 @@ text-align:center;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <header>
-<h1>🦐 Vannamei Shrimp Farm Manager</h1>
+
+<h1>🦐 Vannamei Farm Manager</h1>
+
 </header>
 
 <div class="container">
 
+
 <div class="card">
+
 <h2>Pond Setup</h2>
 
-<input type="text" id="pondName" placeholder="Pond Name">
-<input type="date" id="stockDate">
-<input type="number" id="plCount" placeholder="PL Stocked">
+<input id="pond" placeholder="Pond Name">
+
+<input type="date" id="stock">
+
+<input type="number" id="pl" placeholder="PL Count">
 
 <button onclick="savePond()">Save Pond</button>
 
@@ -109,97 +114,129 @@ text-align:center;
 <div class="dashboard">
 
 <div class="metric">
+
 <h3 id="doc">0</h3>
+
 DOC
+
 </div>
 
 <div class="metric">
-<h3 id="feedTotal">0</h3>
-Feed (kg)
+
+<h3 id="feed">0</h3>
+
+Feed kg
+
 </div>
 
 <div class="metric">
-<h3 id="avgWeight">0</h3>
-Weight (g)
+
+<h3 id="weight">0</h3>
+
+Weight g
+
 </div>
 
 <div class="metric">
+
 <h3 id="fcr">0</h3>
+
 FCR
-</div>
 
 </div>
 
 </div>
+
+</div>
+
 
 
 <div class="card">
 
 <h2>Feed Log</h2>
 
-<input type="number" id="feedInput" placeholder="Feed kg">
+<input id="feedInput" type="number" placeholder="Feed kg">
 
 <button onclick="addFeed()">Add Feed</button>
 
 <table id="feedTable">
+
 <tr>
+
 <th>Date</th>
+
 <th>Feed</th>
+
 </tr>
+
 </table>
 
 </div>
+
 
 
 <div class="card">
 
 <h2>Growth Sampling</h2>
 
-<input type="number" id="weightInput" placeholder="Average Weight g">
+<input id="growthInput" type="number" placeholder="Avg Weight g">
 
-<button onclick="addGrowth()">Add Weight</button>
+<button onclick="addGrowth()">Save</button>
 
 <canvas id="growthChart"></canvas>
 
 </div>
 
 
+
 <div class="card">
 
 <h2>Water Quality</h2>
 
-<input type="number" id="ph" placeholder="pH">
-<input type="number" id="do" placeholder="DO mg/L">
-<input type="number" id="sal" placeholder="Salinity ppt">
+<input id="ph" placeholder="pH">
+
+<input id="do" placeholder="DO">
+
+<input id="salinity" placeholder="Salinity">
 
 <button onclick="addWater()">Save</button>
 
 <table id="waterTable">
+
 <tr>
+
 <th>pH</th>
+
 <th>DO</th>
+
 <th>Salinity</th>
+
 </tr>
+
 </table>
 
 </div>
+
 
 
 <div class="card">
 
 <h2>Expense Tracker</h2>
 
-<input type="text" id="expenseName" placeholder="Expense type">
+<input id="expName" placeholder="Item">
 
-<input type="number" id="expenseAmount" placeholder="Amount">
+<input id="expAmount" placeholder="Amount">
 
-<button onclick="addExpense()">Add Expense</button>
+<button onclick="addExpense()">Add</button>
 
-<table id="expenseTable">
+<table id="expTable">
 
 <tr>
+
 <th>Item</th>
+
 <th>Amount</th>
+
 </tr>
 
 </table>
@@ -207,178 +244,211 @@ FCR
 </div>
 
 
+
 <div class="card">
 
 <h2>Profit Calculator</h2>
 
-<input type="number" id="harvestKg" placeholder="Harvest kg">
+<input id="harvest" placeholder="Harvest kg">
 
-<input type="number" id="priceKg" placeholder="Price per kg">
+<input id="price" placeholder="Price per kg">
 
-<button onclick="calculateProfit()">Calculate Profit</button>
+<button onclick="profit()">Calculate</button>
 
-<h3 id="profitResult"></h3>
+<h3 id="result"></h3>
+
+</div>
+
 
 </div>
 
-</div>
 
 
 <script>
 
-let totalFeed=0;
-let weights=[];
-let labels=[];
-let totalExpense=0;
+let totalFeed=0
+let totalExpense=0
+
+let weights=[]
+let labels=[]
+
 
 function savePond(){
 
-let date=document.getElementById("stockDate").value;
+let date=document.getElementById("stock").value
 
-localStorage.setItem("stockDate",date);
+localStorage.setItem("stock",date)
 
-updateDOC();
+updateDOC()
 
 }
 
 function updateDOC(){
 
-let date=localStorage.getItem("stockDate");
+let date=localStorage.getItem("stock")
 
-if(!date)return;
+if(!date)return
 
-let start=new Date(date);
-let today=new Date();
+let start=new Date(date)
 
-let diff=Math.floor((today-start)/(1000*60*60*24));
+let today=new Date()
 
-document.getElementById("doc").innerText=diff;
+let doc=Math.floor((today-start)/(1000*60*60*24))
+
+document.getElementById("doc").innerText=doc
 
 }
 
-updateDOC();
+updateDOC()
+
+
 
 function addFeed(){
 
-let feed=parseFloat(document.getElementById("feedInput").value);
+let feed=parseFloat(document.getElementById("feedInput").value)
 
-if(!feed)return;
+totalFeed+=feed
 
-totalFeed+=feed;
+document.getElementById("feed").innerText=totalFeed
 
-document.getElementById("feedTotal").innerText=totalFeed;
+let table=document.getElementById("feedTable")
 
-let table=document.getElementById("feedTable");
+let row=table.insertRow()
 
-let row=table.insertRow();
+row.insertCell(0).innerText=new Date().toLocaleDateString()
 
-row.insertCell(0).innerText=new Date().toLocaleDateString();
+row.insertCell(1).innerText=feed
 
-row.insertCell(1).innerText=feed;
-
-calculateFCR();
+calcFCR()
 
 }
+
+
 
 function addGrowth(){
 
-let weight=parseFloat(document.getElementById("weightInput").value);
+let w=parseFloat(document.getElementById("growthInput").value)
 
-weights.push(weight);
+weights.push(w)
 
-labels.push("Sample "+weights.length);
+labels.push("S"+weights.length)
 
-document.getElementById("avgWeight").innerText=weight;
+document.getElementById("weight").innerText=w
 
-chart.update();
+chart.update()
 
-calculateFCR();
+calcFCR()
 
 }
 
-function calculateFCR(){
 
-let weight=document.getElementById("avgWeight").innerText;
 
-let pl=document.getElementById("plCount").value;
+function calcFCR(){
+
+let weight=document.getElementById("weight").innerText
+
+let pl=document.getElementById("pl").value
 
 if(weight>0 && pl>0){
 
-let biomass=(weight*pl)/1000;
+let biomass=(weight*pl)/1000
 
-let fcr=(totalFeed/biomass).toFixed(2);
+let fcr=(totalFeed/biomass).toFixed(2)
 
-document.getElementById("fcr").innerText=fcr;
+document.getElementById("fcr").innerText=fcr
+
+}
 
 }
 
-}
+
 
 function addWater(){
 
-let ph=document.getElementById("ph").value;
-let d=document.getElementById("do").value;
-let sal=document.getElementById("sal").value;
+let ph=document.getElementById("ph").value
 
-let table=document.getElementById("waterTable");
+let dox=document.getElementById("do").value
 
-let row=table.insertRow();
+let sal=document.getElementById("salinity").value
 
-row.insertCell(0).innerText=ph;
-row.insertCell(1).innerText=d;
-row.insertCell(2).innerText=sal;
+let table=document.getElementById("waterTable")
+
+let row=table.insertRow()
+
+row.insertCell(0).innerText=ph
+
+row.insertCell(1).innerText=dox
+
+row.insertCell(2).innerText=sal
 
 }
+
+
 
 function addExpense(){
 
-let name=document.getElementById("expenseName").value;
+let name=document.getElementById("expName").value
 
-let amount=parseFloat(document.getElementById("expenseAmount").value);
+let amount=parseFloat(document.getElementById("expAmount").value)
 
-totalExpense+=amount;
+totalExpense+=amount
 
-let table=document.getElementById("expenseTable");
+let table=document.getElementById("expTable")
 
-let row=table.insertRow();
+let row=table.insertRow()
 
-row.insertCell(0).innerText=name;
-row.insertCell(1).innerText=amount;
+row.insertCell(0).innerText=name
 
-}
-
-function calculateProfit(){
-
-let harvest=document.getElementById("harvestKg").value;
-
-let price=document.getElementById("priceKg").value;
-
-let income=harvest*price;
-
-let profit=income-totalExpense;
-
-document.getElementById("profitResult").innerText="Profit ₹ "+profit;
+row.insertCell(1).innerText=amount
 
 }
 
-let ctx=document.getElementById("growthChart");
+
+
+function profit(){
+
+let harvest=document.getElementById("harvest").value
+
+let price=document.getElementById("price").value
+
+let income=harvest*price
+
+let p=income-totalExpense
+
+document.getElementById("result").innerText="Profit ₹ "+p
+
+}
+
+
+
+let ctx=document.getElementById("growthChart")
 
 let chart=new Chart(ctx,{
-type:'line',
+
+type:"line",
+
 data:{
+
 labels:labels,
+
 datasets:[{
-label:'Shrimp Growth (g)',
+
+label:"Growth g",
+
 data:weights,
+
 borderWidth:3
+
 }]
+
 },
-options:{
-responsive:true
-}
-});
+
+options:{responsive:true}
+
+})
 
 </script>
 
 </body>
+
 </html>
