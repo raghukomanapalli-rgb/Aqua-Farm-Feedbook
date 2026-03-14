@@ -1,76 +1,384 @@
-<div id="feeding-schedule">
-  <h2>Feeding Schedule</h2>
-  <button id="download-csv">Download CSV</button>
-  <button id="download-pdf">Download PDF</button>
-  <table>
-    <thead>
-      <tr>
-        <th>Day</th>
-        <th>Feed Amount</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vannamei Shrimp Farm Manager</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f2f7f8;
+}
+
+header{
+background:#00695c;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+padding:15px;
+max-width:1000px;
+margin:auto;
+}
+
+.card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+}
+
+h2{
+color:#00695c;
+}
+
+input,button,select{
+width:100%;
+padding:10px;
+margin:6px 0;
+}
+
+button{
+background:#00695c;
+color:white;
+border:none;
+border-radius:6px;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+}
+
+.metric{
+background:#009688;
+color:white;
+padding:15px;
+text-align:center;
+border-radius:8px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:8px;
+text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🦐 Vannamei Shrimp Farm Manager</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Pond Setup</h2>
+
+<input type="text" id="pondName" placeholder="Pond Name">
+<input type="date" id="stockDate">
+<input type="number" id="plCount" placeholder="PL Stocked">
+
+<button onclick="savePond()">Save Pond</button>
+
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div class="card">
+
+<h2>Farm Dashboard</h2>
+
+<div class="dashboard">
+
+<div class="metric">
+<h3 id="doc">0</h3>
+DOC
+</div>
+
+<div class="metric">
+<h3 id="feedTotal">0</h3>
+Feed (kg)
+</div>
+
+<div class="metric">
+<h3 id="avgWeight">0</h3>
+Weight (g)
+</div>
+
+<div class="metric">
+<h3 id="fcr">0</h3>
+FCR
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Feed Log</h2>
+
+<input type="number" id="feedInput" placeholder="Feed kg">
+
+<button onclick="addFeed()">Add Feed</button>
+
+<table id="feedTable">
+<tr>
+<th>Date</th>
+<th>Feed</th>
+</tr>
+</table>
+
+</div>
+
+
+<div class="card">
+
+<h2>Growth Sampling</h2>
+
+<input type="number" id="weightInput" placeholder="Average Weight g">
+
+<button onclick="addGrowth()">Add Weight</button>
+
+<canvas id="growthChart"></canvas>
+
+</div>
+
+
+<div class="card">
+
+<h2>Water Quality</h2>
+
+<input type="number" id="ph" placeholder="pH">
+<input type="number" id="do" placeholder="DO mg/L">
+<input type="number" id="sal" placeholder="Salinity ppt">
+
+<button onclick="addWater()">Save</button>
+
+<table id="waterTable">
+<tr>
+<th>pH</th>
+<th>DO</th>
+<th>Salinity</th>
+</tr>
+</table>
+
+</div>
+
+
+<div class="card">
+
+<h2>Expense Tracker</h2>
+
+<input type="text" id="expenseName" placeholder="Expense type">
+
+<input type="number" id="expenseAmount" placeholder="Amount">
+
+<button onclick="addExpense()">Add Expense</button>
+
+<table id="expenseTable">
+
+<tr>
+<th>Item</th>
+<th>Amount</th>
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="card">
+
+<h2>Profit Calculator</h2>
+
+<input type="number" id="harvestKg" placeholder="Harvest kg">
+
+<input type="number" id="priceKg" placeholder="Price per kg">
+
+<button onclick="calculateProfit()">Calculate Profit</button>
+
+<h3 id="profitResult"></h3>
+
+</div>
+
+</div>
+
+
 <script>
-  const form = document.getElementById('feed-form');
-  const feedingSchedule = document.querySelector('#feeding-schedule tbody');
 
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const seedCount = parseInt(document.getElementById('seed-count').value);
-    const feedType = document.getElementById('feed-type').value;
-    populateFeedingSchedule(seedCount, feedType);
-  });
+let totalFeed=0;
+let weights=[];
+let labels=[];
+let totalExpense=0;
 
-  function populateFeedingSchedule(seedCount, feedType) {
-    feedingSchedule.innerHTML = '';
-    const feedAmount = calculateFeedAmount(seedCount, feedType);
-    for (let day = 1; day <= 120; day++) {
-      const row = feedingSchedule.insertRow();
-      row.insertCell(0).textContent = `Day ${day}`;
-      row.insertCell(1).textContent = `${feedAmount} kg`;
-    }
-  }
+function savePond(){
 
-  function calculateFeedAmount(seedCount, feedType) {
-    let multiplier = 0.02;
-    if (feedType === 'Higee Feeds') multiplier = 0.025;
-    else if (feedType === 'CP') multiplier = 0.03;
-    else if (feedType === 'Kaytee') multiplier = 0.022;
-    else if (feedType === 'Srinivasa Feeds') multiplier = 0.021;
-    else if (feedType === 'Heritage Feeds') multiplier = 0.024;
-    else if (feedType === 'Krish Feeds') multiplier = 0.023;
-    return (seedCount * multiplier).toFixed(2);
-  }
+let date=document.getElementById("stockDate").value;
 
-  // 📥 Download CSV
-  document.getElementById('download-csv').addEventListener('click', () => {
-    let csvContent = "Day,Feed Amount\n";
-    [...feedingSchedule.rows].forEach(row => {
-      csvContent += `${row.cells[0].textContent},${row.cells[1].textContent}\n`;
-    });
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = "feeding_schedule.csv";
-    link.click();
-  });
+localStorage.setItem("stockDate",date);
 
-  // 📄 Download PDF
-  document.getElementById('download-pdf').addEventListener('click', () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.text("Feeding Schedule", 10, 10);
+updateDOC();
 
-    let y = 20;
-    [...feedingSchedule.rows].forEach(row => {
-      doc.text(`${row.cells[0].textContent} - ${row.cells[1].textContent}`, 10, y);
-      y += 10;
-    });
+}
 
-    doc.save("feeding_schedule.pdf");
-  });
+function updateDOC(){
+
+let date=localStorage.getItem("stockDate");
+
+if(!date)return;
+
+let start=new Date(date);
+let today=new Date();
+
+let diff=Math.floor((today-start)/(1000*60*60*24));
+
+document.getElementById("doc").innerText=diff;
+
+}
+
+updateDOC();
+
+function addFeed(){
+
+let feed=parseFloat(document.getElementById("feedInput").value);
+
+if(!feed)return;
+
+totalFeed+=feed;
+
+document.getElementById("feedTotal").innerText=totalFeed;
+
+let table=document.getElementById("feedTable");
+
+let row=table.insertRow();
+
+row.insertCell(0).innerText=new Date().toLocaleDateString();
+
+row.insertCell(1).innerText=feed;
+
+calculateFCR();
+
+}
+
+function addGrowth(){
+
+let weight=parseFloat(document.getElementById("weightInput").value);
+
+weights.push(weight);
+
+labels.push("Sample "+weights.length);
+
+document.getElementById("avgWeight").innerText=weight;
+
+chart.update();
+
+calculateFCR();
+
+}
+
+function calculateFCR(){
+
+let weight=document.getElementById("avgWeight").innerText;
+
+let pl=document.getElementById("plCount").value;
+
+if(weight>0 && pl>0){
+
+let biomass=(weight*pl)/1000;
+
+let fcr=(totalFeed/biomass).toFixed(2);
+
+document.getElementById("fcr").innerText=fcr;
+
+}
+
+}
+
+function addWater(){
+
+let ph=document.getElementById("ph").value;
+let d=document.getElementById("do").value;
+let sal=document.getElementById("sal").value;
+
+let table=document.getElementById("waterTable");
+
+let row=table.insertRow();
+
+row.insertCell(0).innerText=ph;
+row.insertCell(1).innerText=d;
+row.insertCell(2).innerText=sal;
+
+}
+
+function addExpense(){
+
+let name=document.getElementById("expenseName").value;
+
+let amount=parseFloat(document.getElementById("expenseAmount").value);
+
+totalExpense+=amount;
+
+let table=document.getElementById("expenseTable");
+
+let row=table.insertRow();
+
+row.insertCell(0).innerText=name;
+row.insertCell(1).innerText=amount;
+
+}
+
+function calculateProfit(){
+
+let harvest=document.getElementById("harvestKg").value;
+
+let price=document.getElementById("priceKg").value;
+
+let income=harvest*price;
+
+let profit=income-totalExpense;
+
+document.getElementById("profitResult").innerText="Profit ₹ "+profit;
+
+}
+
+let ctx=document.getElementById("growthChart");
+
+let chart=new Chart(ctx,{
+type:'line',
+data:{
+labels:labels,
+datasets:[{
+label:'Shrimp Growth (g)',
+data:weights,
+borderWidth:3
+}]
+},
+options:{
+responsive:true
+}
+});
+
 </script>
+
+</body>
+</html>
